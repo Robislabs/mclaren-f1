@@ -3,1337 +3,866 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>McLaren F1 — Built to Win</title>
+<title>McLaren F1 — MCL38</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* ─── RESET & TOKENS ──────────────────────────────────────────── */
+/* ── RESET & TOKENS ─────────────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
 :root {
-  --orange: #FF8000;
-  --orange-dim: rgba(255,128,0,0.15);
-  --orange-glow: rgba(255,128,0,0.4);
-  --bg: #080808;
-  --surface: #0f0f0f;
-  --surface2: #161616;
-  --white: #ffffff;
-  --gray: #888888;
-  --gray-dim: #333333;
-  --font-display: 'Barlow Condensed', 'Impact', sans-serif;
-  --font-body: 'Barlow', sans-serif;
+  --orange:      #FF8000;
+  --orange2:     #FF9A33;
+  --orange-dim:  rgba(255,128,0,0.12);
+  --orange-glow: rgba(255,128,0,0.35);
+  --bg:          #070707;
+  --s1:          #0d0d0d;
+  --s2:          #141414;
+  --s3:          #1a1a1a;
+  --white:       #ffffff;
+  --gray:        #7a7a7a;
+  --gray2:       #444;
+  --display:     'Barlow Condensed', Impact, sans-serif;
+  --body:        'Barlow', sans-serif;
 }
-
 html { scroll-behavior: smooth; overflow-x: hidden; }
-body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: var(--font-body);
-  overflow-x: hidden;
-  cursor: none;
+body { background: var(--bg); color: var(--white); font-family: var(--body); overflow-x: hidden; cursor: none; }
+
+/* ── SCROLL PROGRESS ────────────────────────────────────── */
+#progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--orange), var(--orange2));
+  z-index: 9999; transition: width 0.1s linear;
+  box-shadow: 0 0 12px var(--orange-glow);
 }
 
-/* ─── CUSTOM CURSOR ───────────────────────────────────────────── */
-#cursor {
-  position: fixed;
-  width: 10px; height: 10px;
-  background: var(--orange);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
-  mix-blend-mode: normal;
-}
-#cursor-ring {
-  position: fixed;
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(255,128,0,0.5);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s;
-}
-body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 6px; height: 6px; }
-body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring {
-  width: 52px; height: 52px;
-  border-color: var(--orange);
-}
+/* ── CURSOR ─────────────────────────────────────────────── */
+#cur  { position:fixed; width:8px; height:8px; background:var(--orange); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); }
+#ring { position:fixed; width:32px; height:32px; border:1.5px solid rgba(255,128,0,0.55); border-radius:50%; pointer-events:none; z-index:9997; transform:translate(-50%,-50%); transition:width .25s,height .25s,border-color .25s,opacity .25s; }
+body.cursor-hover #ring { width:52px; height:52px; border-color:var(--orange); }
 
-/* ─── GRAIN OVERLAY ──────────────────────────────────────────── */
+/* ── GRAIN ──────────────────────────────────────────────── */
 #grain {
-  position: fixed;
-  inset: -50%;
-  width: 200%; height: 200%;
-  pointer-events: none;
-  z-index: 9997;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  animation: grain-shift 0.4s steps(1) infinite;
+  position:fixed; inset:-50%; width:200%; height:200%;
+  pointer-events:none; z-index:9996; opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+  animation: grain .35s steps(1) infinite;
 }
-@keyframes grain-shift {
-  0%   { transform: translate(0,0); }
-  10%  { transform: translate(-3%,-4%); }
-  20%  { transform: translate(2%,5%); }
-  30%  { transform: translate(-4%,2%); }
-  40%  { transform: translate(5%,-3%); }
-  50%  { transform: translate(-2%,4%); }
-  60%  { transform: translate(4%,-5%); }
-  70%  { transform: translate(-5%,3%); }
-  80%  { transform: translate(3%,-2%); }
-  90%  { transform: translate(-3%,5%); }
-  100% { transform: translate(4%,-4%); }
+@keyframes grain {
+  0%{transform:translate(0,0)} 12%{transform:translate(-4%,-5%)} 24%{transform:translate(5%,4%)}
+  36%{transform:translate(-3%,5%)} 48%{transform:translate(4%,-3%)} 60%{transform:translate(-5%,2%)}
+  72%{transform:translate(3%,-4%)} 84%{transform:translate(-2%,5%)} 100%{transform:translate(4%,-3%)}
 }
 
-/* ─── NAV ────────────────────────────────────────────────────── */
+/* ── CHECKER OVERLAY ────────────────────────────────────── */
+#checker {
+  position:fixed; inset:0; z-index:9000; pointer-events:none;
+  display:grid; grid-template-columns:repeat(12,1fr); grid-template-rows:repeat(7,1fr);
+}
+.ck {
+  transform:scale(0); transform-origin:center;
+  animation: ck-in .5s cubic-bezier(.76,0,.24,1) forwards, ck-out .45s cubic-bezier(.76,0,.24,1) forwards;
+}
+@keyframes ck-in  { to { transform:scale(1); } }
+@keyframes ck-out { from{transform:scale(1)} to{transform:scale(0)} }
+
+/* ── NAV ────────────────────────────────────────────────── */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 0 48px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background 0.4s, backdrop-filter 0.4s;
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:60px; padding:0 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  transition:background .4s,backdrop-filter .4s;
 }
-nav.scrolled {
-  background: rgba(8,8,8,0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,128,0,0.08);
+nav.sc { background:rgba(7,7,7,.88); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,128,0,.08); }
+.nav-logo { font-family:var(--display); font-size:20px; font-weight:900; letter-spacing:.16em; text-transform:uppercase; text-decoration:none; color:var(--white); }
+.nav-logo em { color:var(--orange); font-style:normal; }
+.nav-links { display:flex; gap:32px; list-style:none; }
+.nav-links a { font-family:var(--display); font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--gray); text-decoration:none; transition:color .2s; position:relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1.5px; background:var(--orange); transition:width .25s; }
+.nav-links a:hover { color:var(--white); }
+.nav-links a:hover::after { width:100%; }
+.nav-btn {
+  font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  background:var(--orange); color:var(--bg); border:none; padding:9px 22px;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+  cursor:none; transition:background .2s,box-shadow .2s;
 }
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
-}
-.nav-logo span { color: var(--orange); }
-.nav-links {
-  display: flex;
-  gap: 36px;
-  list-style: none;
-}
-.nav-links a {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gray);
-  text-decoration: none;
-  transition: color 0.2s;
-  position: relative;
-}
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px; left: 0;
-  width: 0; height: 1.5px;
-  background: var(--orange);
-  transition: width 0.25s;
-}
-.nav-links a:hover { color: var(--white); }
-.nav-links a:hover::after { width: 100%; }
-.nav-cta {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--bg);
-  background: var(--orange);
-  border: none;
-  padding: 9px 22px;
-  cursor: none;
-  transition: background 0.2s, transform 0.2s;
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-}
-.nav-cta:hover { background: #ff9a33; transform: translateY(-1px); }
+.nav-btn:hover { background:var(--orange2); box-shadow:0 0 24px var(--orange-glow); }
 
-/* ─── HERO ───────────────────────────────────────────────────── */
+/* ── HERO ───────────────────────────────────────────────── */
 .hero {
-  position: relative;
-  height: 100dvh;
-  min-height: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 48px 80px;
-  overflow: hidden;
+  position:relative; height:100dvh; min-height:600px;
+  display:flex; flex-direction:column; justify-content:flex-end; padding:0 56px 72px;
+  overflow:hidden; background:var(--bg);
 }
 
-/* radial orange glow behind text */
+/* hero checker bg pattern (decorative) */
+.hero-checker-bg {
+  position:absolute; inset:0; pointer-events:none;
+  background-image:
+    repeating-conic-gradient(rgba(255,128,0,.032) 0% 25%, transparent 0% 50%);
+  background-size:60px 60px; background-position:center;
+  opacity:0; animation:hero-grid-fade 1s ease 2.8s forwards;
+}
+@keyframes hero-grid-fade { to { opacity:1; } }
+
+/* orange glow */
 .hero::before {
-  content: '';
-  position: absolute;
-  bottom: -10%; left: -5%;
-  width: 60%; height: 70%;
-  background: radial-gradient(ellipse at 30% 70%, rgba(255,128,0,0.12) 0%, transparent 65%);
-  pointer-events: none;
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 70% 60%, rgba(255,128,0,.10) 0%, transparent 65%);
 }
 
-/* speed lines */
-.speed-lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
+/* ─ speed lines ─ */
+.slines { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.slines span {
+  position:absolute; left:-120%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,128,0,.5),transparent);
+  animation:swp linear infinite; will-change:transform;
 }
-.speed-lines span {
-  position: absolute;
-  left: -100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,128,0,0.4), transparent);
-  animation: speed-sweep linear infinite;
-  will-change: transform;
-}
-.speed-lines span:nth-child(1)  { top: 18%; width: 60%; animation-duration: 2.8s; animation-delay: 0s;    opacity: 0.6; }
-.speed-lines span:nth-child(2)  { top: 31%; width: 80%; animation-duration: 2.1s; animation-delay: 0.4s;  opacity: 0.3; }
-.speed-lines span:nth-child(3)  { top: 44%; width: 55%; animation-duration: 3.4s; animation-delay: 0.9s;  opacity: 0.5; }
-.speed-lines span:nth-child(4)  { top: 57%; width: 70%; animation-duration: 2.5s; animation-delay: 0.2s;  opacity: 0.2; }
-.speed-lines span:nth-child(5)  { top: 68%; width: 90%; animation-duration: 1.9s; animation-delay: 0.7s;  opacity: 0.4; }
-.speed-lines span:nth-child(6)  { top: 77%; width: 50%; animation-duration: 3.1s; animation-delay: 1.2s;  opacity: 0.3; }
-.speed-lines span:nth-child(7)  { top: 85%; width: 75%; animation-duration: 2.3s; animation-delay: 0.5s;  opacity: 0.5; }
+.slines span:nth-child(1){top:16%;width:65%;animation-duration:2.6s;animation-delay:.0s;opacity:.7}
+.slines span:nth-child(2){top:28%;width:85%;animation-duration:1.9s;animation-delay:.5s;opacity:.3}
+.slines span:nth-child(3){top:40%;width:55%;animation-duration:3.2s;animation-delay:.9s;opacity:.5}
+.slines span:nth-child(4){top:54%;width:75%;animation-duration:2.3s;animation-delay:.3s;opacity:.25}
+.slines span:nth-child(5){top:66%;width:90%;animation-duration:1.7s;animation-delay:.7s;opacity:.5}
+.slines span:nth-child(6){top:78%;width:50%;animation-duration:2.9s;animation-delay:1.1s;opacity:.3}
+.slines span:nth-child(7){top:88%;width:70%;animation-duration:2.1s;animation-delay:.4s;opacity:.55}
+@keyframes swp { 0%{transform:translateX(0)} 100%{transform:translateX(300vw)} }
 
-@keyframes speed-sweep {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(300vw); }
+/* ─ F1 car ─ */
+.car-wrap {
+  position:absolute; right:-3%; bottom:0;
+  width:72%; max-width:900px;
+  pointer-events:none;
+  opacity:0; transform:translateX(80px);
+  animation:car-arrive 1.1s cubic-bezier(.16,1,.3,1) 2.2s forwards;
 }
-
-/* ghost number behind */
-.hero-ghost-num {
-  position: absolute;
-  right: -2vw;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-display);
-  font-size: clamp(300px, 42vw, 600px);
-  font-weight: 900;
-  line-height: 0.85;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255,128,0,0.07);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-  letter-spacing: -0.04em;
+@keyframes car-arrive {
+  to { opacity:1; transform:translateX(0); }
 }
+.car-wrap svg { width:100%; height:auto; filter:drop-shadow(0 0 40px rgba(255,128,0,.22)) drop-shadow(0 30px 60px rgba(0,0,0,.6)); }
+/* car glow trail */
+.car-wrap::before {
+  content:''; position:absolute; left:0; top:50%;
+  width:60%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,128,0,.35));
+  transform:translateY(-50%);
+}
+/* floating breath */
+.car-wrap { animation:car-arrive 1.1s cubic-bezier(.16,1,.3,1) 2.2s forwards; }
+.car-svg { animation:car-float 4s ease-in-out 3.3s infinite; }
+@keyframes car-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 
 /* hero content */
-.hero-content { position: relative; z-index: 2; }
+.hero-content { position:relative; z-index:5; }
+.hero-eye {
+  font-family:var(--display); font-size:11px; font-weight:600; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:18px;
+  opacity:0; transform:translateY(16px);
+  animation:su .6s cubic-bezier(.16,1,.3,1) 2.6s forwards;
+}
+.hero-h1 {
+  font-family:var(--display); font-size:clamp(80px,13vw,200px);
+  font-weight:900; line-height:.88; text-transform:uppercase; letter-spacing:-.02em;
+  margin-bottom:28px; overflow:visible;
+}
+.hl { display:block; overflow:hidden; }
+.hl span {
+  display:block;
+  opacity:0; clip-path:inset(0 100% 0 0);
+  animation:cr .9s cubic-bezier(.16,1,.3,1) forwards;
+}
+.hl:nth-child(1) span{animation-delay:2.3s}
+.hl:nth-child(2) span{animation-delay:2.45s}
+.hl:nth-child(3) span{animation-delay:2.58s}
+@keyframes cr { 0%{opacity:1;clip-path:inset(0 100% 0 0)} 100%{opacity:1;clip-path:inset(0 0% 0 0)} }
+@keyframes su  { to{opacity:1;transform:translateY(0)} }
 
-.hero-eyebrow {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 20px;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-}
-
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(80px, 14vw, 220px);
-  font-weight: 900;
-  line-height: 0.88;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  overflow: hidden;
-  margin-bottom: 32px;
-}
-.hero-title-line {
-  display: block;
-  overflow: hidden;
-}
-.hero-title-line span {
-  display: block;
-  opacity: 0;
-  clip-path: inset(0 100% 0 0);
-  animation: clip-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.hero-title-line:nth-child(1) span { animation-delay: 0.3s; }
-.hero-title-line:nth-child(2) span { animation-delay: 0.5s; }
-.hero-title-line:nth-child(3) span { animation-delay: 0.65s; }
-
-@keyframes clip-reveal {
-  0%   { opacity: 1; clip-path: inset(0 100% 0 0); }
-  100% { opacity: 1; clip-path: inset(0 0% 0 0); }
-}
-@keyframes slide-up {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.title-orange { color: var(--orange); }
-
+.orange { color:var(--orange); }
 .hero-sub {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.0s forwards;
+  display:flex; align-items:center; gap:32px;
+  font-family:var(--display); font-size:14px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--gray);
+  opacity:0; transform:translateY(16px);
+  animation:su .7s cubic-bezier(.16,1,.3,1) 2.9s forwards;
 }
-.hero-driver {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
-.hero-driver strong { color: var(--white); }
-.hero-divider { width: 1px; height: 32px; background: var(--gray-dim); }
+.hero-sub strong { color:var(--white); }
+.hero-sub-div { width:1px; height:28px; background:var(--gray2); }
 
-/* scroll indicator */
-.scroll-indicator {
-  position: absolute;
-  bottom: 40px;
-  right: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  opacity: 0;
-  animation: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.4s forwards;
+/* scroll cue */
+.scroll-cue {
+  position:absolute; bottom:36px; left:56px; z-index:5;
+  display:flex; align-items:center; gap:16px;
+  opacity:0; animation:su .7s cubic-bezier(.16,1,.3,1) 3.2s forwards;
 }
-.scroll-indicator span {
-  font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--gray);
-  writing-mode: vertical-lr;
+.scroll-cue span { font-family:var(--display); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--gray); }
+.scroll-line { width:50px; height:1px; background:linear-gradient(90deg,var(--orange),transparent); animation:scroll-pulse 2s ease-in-out infinite; }
+@keyframes scroll-pulse { 0%,100%{width:50px;opacity:.5} 50%{width:90px;opacity:1} }
+
+/* ── TICKER ─────────────────────────────────────────────── */
+.ticker { background:var(--orange); overflow:hidden; padding:12px 0; }
+.t-track { display:flex; width:max-content; animation:tick 35s linear infinite; }
+.t-item {
+  white-space:nowrap; padding:0 28px;
+  font-family:var(--display); font-size:13px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--bg);
+  display:flex; align-items:center; gap:28px;
 }
-.scroll-indicator-line {
-  width: 1px;
-  height: 60px;
-  background: linear-gradient(to bottom, var(--orange), transparent);
-  animation: scroll-pulse 2s ease-in-out infinite;
+.t-dot { display:inline-block; width:5px; height:5px; background:rgba(7,7,7,.35); border-radius:50%; }
+@keyframes tick { to { transform:translateX(-50%); } }
+
+/* ── SECTION COMMONS ────────────────────────────────────── */
+section { position:relative; overflow:hidden; }
+.sec-label {
+  font-family:var(--display); font-size:10px; font-weight:700; letter-spacing:.35em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:14px; display:flex; align-items:center; gap:12px;
 }
-@keyframes scroll-pulse {
-  0%, 100% { transform: scaleY(1); opacity: 0.6; }
-  50% { transform: scaleY(0.4); opacity: 1; }
+.sec-label::before { content:''; width:28px; height:1.5px; background:var(--orange); }
+.big-title {
+  font-family:var(--display); font-size:clamp(44px,7vw,100px); font-weight:900;
+  text-transform:uppercase; letter-spacing:-.02em; line-height:.92;
 }
 
-/* ─── TICKER ─────────────────────────────────────────────────── */
-.ticker-wrap {
-  background: var(--orange);
-  overflow: hidden;
-  padding: 14px 0;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.ticker-track {
-  display: flex;
-  width: max-content;
-  animation: ticker-scroll 40s linear infinite;
-}
-.ticker-item {
-  white-space: nowrap;
-  padding: 0 32px;
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--bg);
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-.ticker-dot {
-  display: inline-block;
-  width: 5px; height: 5px;
-  background: rgba(8,8,8,0.4);
-  border-radius: 50%;
-}
-@keyframes ticker-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+/* reveal classes */
+.rv { opacity:0; transform:translateY(48px); transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1); }
+.rv.vis { opacity:1; transform:translateY(0); }
+.rv-l { opacity:0; transform:translateX(-60px); transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1); }
+.rv-l.vis { opacity:1; transform:translateX(0); }
+.rv-r { opacity:0; transform:translateX(60px); transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1); }
+.rv-r.vis { opacity:1; transform:translateX(0); }
 
-/* ─── SECTION COMMONS ────────────────────────────────────────── */
-section { position: relative; overflow: hidden; }
+/* ── CHECKER TRANSITION BAND ────────────────────────────── */
+.ck-section {
+  height:2px; overflow:hidden; position:relative;
+}
+.ck-band {
+  display:flex; height:100%; align-items:stretch;
+}
+.ck-band div { flex:1; background:var(--orange); transform:scaleX(0); transform-origin:left; }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+/* ── DRIVERS ────────────────────────────────────────────── */
+.drivers { display:grid; grid-template-columns:1fr 1fr; min-height:100dvh; }
+.d-card {
+  position:relative; display:flex; flex-direction:column; justify-content:flex-end;
+  padding:64px 52px; overflow:hidden; min-height:580px;
+  cursor:none; transition:background .4s;
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal-left.visible { opacity: 1; transform: translateX(0); }
-.reveal-right {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.d-card:first-child { background:var(--bg); }
+.d-card:last-child  { background:#0b0b0b; border-left:1px solid #1e1e1e; }
 
-.section-label {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 16px;
+/* ghost number */
+.d-num-bg {
+  position:absolute; top:50%; left:50%; transform:translate(-40%,-50%);
+  font-family:var(--display); font-size:clamp(200px,28vw,420px); font-weight:900;
+  color:transparent; -webkit-text-stroke:1px rgba(255,128,0,.055);
+  pointer-events:none; user-select:none; line-height:1;
+  transition:-webkit-text-stroke .4s;
 }
-
-/* ─── DRIVERS ────────────────────────────────────────────────── */
-.drivers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 100dvh;
-}
-.driver-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 60px 56px;
-  overflow: hidden;
-  min-height: 600px;
-  transition: background 0.4s;
-  cursor: none;
-}
-.driver-card:first-child { background: #0a0a0a; }
-.driver-card:last-child  { background: #0d0d0d; border-left: 1px solid var(--gray-dim); }
-
-/* ghost number background */
-.driver-ghost {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-size: clamp(200px, 30vw, 440px);
-  font-weight: 900;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255,128,0,0.06);
-  pointer-events: none;
-  user-select: none;
-  transition: -webkit-text-stroke 0.4s;
-  line-height: 1;
-}
-.driver-card:hover .driver-ghost {
-  -webkit-text-stroke: 1px rgba(255,128,0,0.18);
-}
-
-/* orange top border that slides in */
-.driver-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 0; height: 3px;
-  background: var(--orange);
-  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.driver-card:hover::before { width: 100%; }
+.d-card:hover .d-num-bg { -webkit-text-stroke:1px rgba(255,128,0,.18); }
 
 /* glow on hover */
-.driver-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 80%, rgba(255,128,0,0.06) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s;
-  pointer-events: none;
+.d-card::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 70% 60% at 50% 90%, rgba(255,128,0,.07) 0%, transparent 70%);
+  opacity:0; transition:opacity .4s;
 }
-.driver-card:hover::after { opacity: 1; }
+.d-card:hover::after { opacity:1; }
 
-.driver-number {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 2;
+/* orange top bar */
+.d-card::before {
+  content:''; position:absolute; top:0; left:0; width:0; height:3px;
+  background:linear-gradient(90deg,var(--orange),var(--orange2));
+  transition:width .55s cubic-bezier(.16,1,.3,1);
 }
-.driver-name {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 5vw, 72px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  line-height: 0.95;
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 2;
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 0s;
-}
-.driver-card.visible .driver-name {
-  clip-path: inset(0 0% 0 0);
-  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.driver-card:first-child.visible .driver-name { transition-delay: 0.1s; }
-.driver-card:last-child.visible  .driver-name { transition-delay: 0.25s; }
+.d-card:hover::before { width:100%; }
 
-.driver-stats {
-  display: flex;
-  gap: 32px;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s, transform 0.5s;
-}
-.driver-card:hover .driver-stats {
-  opacity: 1;
-  transform: translateY(0);
-}
-.driver-stat-item { display: flex; flex-direction: column; gap: 4px; }
-.driver-stat-value {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--orange);
-  line-height: 1;
-}
-.driver-stat-label {
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
+/* border glow (inspired by reference) */
+.d-card { box-shadow:inset 0 0 0 0 rgba(255,128,0,0); transition:box-shadow .4s,background .4s; }
+.d-card:hover { box-shadow:inset 0 0 60px rgba(255,128,0,.04); }
 
-/* center divider line */
-.drivers-divider {
-  position: absolute;
-  left: 50%;
-  top: 0; bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--orange), transparent);
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0;
-  transition: opacity 0.8s;
+.d-tag { font-family:var(--display); font-size:12px; font-weight:600; letter-spacing:.25em; text-transform:uppercase; color:var(--orange); margin-bottom:10px; position:relative; z-index:2; }
+.d-name {
+  font-family:var(--display); font-size:clamp(40px,5.5vw,78px); font-weight:900;
+  text-transform:uppercase; letter-spacing:-.015em; line-height:.92; margin-bottom:28px;
+  position:relative; z-index:2;
+  clip-path:inset(0 100% 0 0); transition:clip-path .0s;
 }
-.drivers-divider.visible { opacity: 1; }
+.d-card.vis .d-name { clip-path:inset(0 0% 0 0); transition:clip-path .9s cubic-bezier(.16,1,.3,1); }
+.d-card:first-child.vis .d-name { transition-delay:.1s; }
+.d-card:last-child.vis  .d-name { transition-delay:.28s; }
 
-/* ─── PERFORMANCE / STATS ────────────────────────────────────── */
-.performance {
-  padding: 120px 48px;
-  background: var(--surface);
-  position: relative;
+.d-stats {
+  display:flex; gap:28px; position:relative; z-index:2;
+  opacity:0; transform:translateY(14px); transition:opacity .5s,transform .5s;
 }
-.performance::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.performance-header {
-  max-width: 560px;
-  margin-bottom: 80px;
-}
-.performance-title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 80px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-}
+.d-card:hover .d-stats { opacity:1; transform:translateY(0); }
+.d-sv { font-family:var(--display); font-size:30px; font-weight:900; color:var(--orange); line-height:1; }
+.d-sl { font-family:var(--display); font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gray); margin-top:3px; }
 
-/* speed lines in performance section */
-.perf-lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: 0.4;
+/* divider */
+.d-div {
+  position:absolute; left:50%; top:0; bottom:0; width:1px; z-index:5; pointer-events:none;
+  background:linear-gradient(to bottom,transparent,var(--orange) 30%,var(--orange) 70%,transparent);
+  opacity:0; transition:opacity .8s;
 }
-.perf-lines span {
-  position: absolute;
-  left: -100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,128,0,0.3), transparent);
-  animation: speed-sweep linear infinite;
-}
-.perf-lines span:nth-child(1) { top: 20%; width: 40%; animation-duration: 4s; animation-delay: 0s; }
-.perf-lines span:nth-child(2) { top: 50%; width: 60%; animation-duration: 5.5s; animation-delay: 1s; }
-.perf-lines span:nth-child(3) { top: 80%; width: 35%; animation-duration: 3.8s; animation-delay: 2s; }
+.d-div.vis { opacity:1; }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+/* ── CHECKER SECTION (scroll reveal) ────────────────────── */
+.checker-reveal {
+  position:relative; height:220px; overflow:hidden; background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
 }
-.stat-block {
-  padding: 40px 36px;
-  background: var(--surface2);
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s;
+.checker-reveal .ck-grid {
+  display:grid; grid-template-columns:repeat(16,1fr); grid-template-rows:repeat(4,1fr);
+  position:absolute; inset:0; pointer-events:none;
 }
-.stat-block:hover { background: #1a1a1a; }
-.stat-block::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 2px;
-  background: var(--orange);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.checker-reveal .ck-tile {
+  transform:scale(0); transition:transform .4s cubic-bezier(.34,1.56,.64,1);
 }
-.stat-block:hover::before { transform: scaleX(1); }
+.checker-reveal.vis .ck-tile { transform:scale(1); }
+.checker-reveal-text {
+  position:relative; z-index:2;
+  font-family:var(--display); font-size:clamp(32px,5vw,60px); font-weight:900;
+  text-transform:uppercase; letter-spacing:.04em; color:var(--bg); text-align:center;
+  opacity:0; transition:opacity .3s .5s;
+  text-shadow: 0 0 0 transparent;
+}
+.checker-reveal.vis .checker-reveal-text { opacity:1; }
 
-.stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(48px, 7vw, 96px);
-  font-weight: 900;
-  color: var(--orange);
-  line-height: 1;
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-}
-.stat-unit {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--white);
-  opacity: 0.5;
-}
-.stat-label {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gray);
-  margin-top: 12px;
-}
+/* ── PERFORMANCE ────────────────────────────────────────── */
+.performance { padding:120px 56px; background:var(--s1); }
+.perf-head { max-width:600px; margin-bottom:80px; }
+.perf-slines { position:absolute; inset:0; pointer-events:none; overflow:hidden; opacity:.35; }
+.perf-slines span { position:absolute; left:-120%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,128,0,.35),transparent); animation:swp linear infinite; }
+.perf-slines span:nth-child(1){top:25%;width:40%;animation-duration:5s;animation-delay:0s}
+.perf-slines span:nth-child(2){top:60%;width:55%;animation-duration:7s;animation-delay:2s}
+.perf-slines span:nth-child(3){top:88%;width:35%;animation-duration:4.5s;animation-delay:1s}
 
-/* ─── SEASON ─────────────────────────────────────────────────── */
-.season {
-  padding: 120px 48px;
-  background: var(--bg);
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
+.s-block {
+  padding:44px 36px; background:var(--s2); position:relative; overflow:hidden;
+  transition:background .3s,transform .3s;
 }
-.season-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 64px;
+.s-block:hover { background:var(--s3); transform:translateY(-3px); }
+.s-block::before {
+  content:''; position:absolute; top:0; left:0; width:100%; height:2px;
+  background:var(--orange); transform:scaleX(0); transform-origin:left;
+  transition:transform .45s cubic-bezier(.16,1,.3,1);
 }
-.season-title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 80px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
+.s-block:hover::before { transform:scaleX(1); }
+/* orange glow bottom */
+.s-block::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,128,0,.2),transparent);
+  opacity:0; transition:opacity .4s;
 }
-.season-scroll-hint {
-  font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gray);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.season-scroll-hint::after {
-  content: '';
-  display: block;
-  width: 40px; height: 1px;
-  background: var(--gray-dim);
-}
+.s-block:hover::after { opacity:1; }
 
-.race-timeline {
-  display: flex;
-  gap: 2px;
-  overflow-x: auto;
-  padding-bottom: 24px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.race-timeline::-webkit-scrollbar { display: none; }
+.s-n { font-family:var(--display); font-size:clamp(52px,8vw,104px); font-weight:900; color:var(--orange); line-height:1; letter-spacing:-.02em; }
+.s-u { font-family:var(--display); font-size:18px; font-weight:600; color:var(--white); opacity:.4; }
+.s-l { font-family:var(--display); font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gray); margin-top:10px; }
 
-.race-card {
-  flex: 0 0 280px;
-  background: var(--surface);
-  padding: 32px 28px;
-  border-bottom: 2px solid var(--gray-dim);
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s, background 0.3s;
-  cursor: none;
-}
-.race-card:hover { background: #111; border-color: var(--orange); }
-.race-card.p1 { border-bottom-color: var(--orange); }
-.race-card.p2 { border-bottom-color: rgba(255,128,0,0.5); }
+/* ── RACE SEASON ────────────────────────────────────────── */
+.season { padding:120px 56px 120px; background:var(--bg); }
+.season-hd { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:60px; }
+.season-hint { font-family:var(--display); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--gray); display:flex; align-items:center; gap:12px; }
+.season-hint::after { content:''; width:36px; height:1px; background:var(--gray2); }
 
-.race-round {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--gray);
-  margin-bottom: 8px;
+.race-row { display:flex; gap:2px; overflow-x:auto; padding-bottom:24px; scrollbar-width:none; }
+.race-row::-webkit-scrollbar { display:none; }
+.r-card {
+  flex:0 0 260px; padding:28px 24px; background:var(--s1); position:relative;
+  border-bottom:2px solid var(--gray2); cursor:none; overflow:hidden;
+  transition:border-color .3s,background .3s,transform .3s;
 }
-.race-name {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  margin-bottom: 24px;
+.r-card:hover { background:var(--s2); border-color:var(--orange); transform:translateY(-4px); }
+.r-card.p1 { border-bottom-color:var(--orange); }
+.r-card.p2 { border-bottom-color:rgba(255,128,0,.45); }
+.r-rd { font-family:var(--display); font-size:10px; font-weight:600; letter-spacing:.25em; text-transform:uppercase; color:var(--gray); margin-bottom:6px; }
+.r-nm { font-family:var(--display); font-size:22px; font-weight:800; text-transform:uppercase; letter-spacing:-.01em; line-height:1.1; margin-bottom:22px; }
+.r-pos { font-family:var(--display); font-size:56px; font-weight:900; line-height:1; color:var(--gray2); }
+.r-card.p1 .r-pos { color:var(--orange); }
+.r-card.p2 .r-pos { color:rgba(255,128,0,.5); }
+.r-pl { font-family:var(--display); font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--gray); }
+.r-dr { margin-top:14px; font-family:var(--display); font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gray); }
+.r-card::after {
+  content:''; position:absolute; top:0; right:0; bottom:0; width:2px;
+  background:linear-gradient(to bottom,transparent,rgba(255,128,0,.15),transparent);
+  opacity:0; transition:opacity .3s;
 }
-.race-result {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.race-position {
-  font-family: var(--font-display);
-  font-size: 52px;
-  font-weight: 900;
-  line-height: 1;
-  color: var(--gray-dim);
-}
-.race-card.p1 .race-position { color: var(--orange); }
-.race-card.p2 .race-position { color: rgba(255,128,0,0.5); }
+.r-card:hover::after { opacity:1; }
 
-.race-position-label {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--gray);
+/* ── TECHNOLOGY ─────────────────────────────────────────── */
+.tech { padding:120px 56px; background:var(--s1); }
+.tech-title { margin-bottom:64px; }
+.tech-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.t-card {
+  padding:52px 44px; background:var(--s2); position:relative; overflow:hidden;
+  cursor:none; transform-style:preserve-3d;
+  transition:background .3s;
 }
-.race-driver {
-  margin-top: 16px;
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--gray);
+.t-card-in { position:relative; z-index:2; }
+.t-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:var(--orange); transform:scaleX(0); transform-origin:left;
+  transition:transform .45s cubic-bezier(.16,1,.3,1);
 }
+.t-card:hover::before { transform:scaleX(1); }
+/* right glow border on hover - inspired by reference */
+.t-card::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,128,0,.06) 0%, transparent 60%);
+  opacity:0; transition:opacity .4s;
+  border:1px solid rgba(255,128,0,0);
+  transition:opacity .4s,border-color .4s;
+}
+.t-card:hover::after { opacity:1; border-color:rgba(255,128,0,.08); }
 
-/* ─── TECHNOLOGY ─────────────────────────────────────────────── */
-.technology {
-  padding: 120px 48px;
-  background: var(--surface);
+.t-ico {
+  width:48px; height:48px; border:1px solid var(--gray2); margin-bottom:32px;
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+  transition:border-color .3s,background .3s;
 }
-.technology-title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 80px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-  margin-bottom: 64px;
-}
+.t-card:hover .t-ico { border-color:var(--orange); background:var(--orange-dim); }
+.t-nm { font-family:var(--display); font-size:30px; font-weight:800; text-transform:uppercase; letter-spacing:-.01em; margin-bottom:6px; }
+.t-st { font-family:var(--display); font-size:40px; font-weight:900; color:var(--orange); line-height:1.1; margin-bottom:14px; }
+.t-desc { font-size:14px; font-weight:300; color:var(--gray); line-height:1.65; }
 
-.tech-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-}
-.tech-card {
-  padding: 48px 40px;
-  background: var(--surface2);
-  position: relative;
-  overflow: hidden;
-  cursor: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-style: preserve-3d;
-}
-.tech-card-inner {
-  position: relative;
-  z-index: 2;
-}
-.tech-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--orange);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.tech-card:hover::before { transform: scaleX(1); }
-.tech-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(255,128,0,0.05) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-.tech-card:hover::after { opacity: 1; }
-
-.tech-icon {
-  width: 48px; height: 48px;
-  border: 1px solid var(--gray-dim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 32px;
-  font-size: 20px;
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-  transition: border-color 0.3s, background 0.3s;
-}
-.tech-card:hover .tech-icon {
-  border-color: var(--orange);
-  background: var(--orange-dim);
-}
-.tech-name {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  margin-bottom: 8px;
-}
-.tech-stat {
-  font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--orange);
-  margin-bottom: 16px;
-  line-height: 1;
-}
-.tech-desc {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--gray);
-  line-height: 1.6;
-}
-
-/* ─── CTA / FOOTER ───────────────────────────────────────────── */
+/* ── CTA ────────────────────────────────────────────────── */
 .cta {
-  position: relative;
-  height: 100dvh;
-  min-height: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  text-align: center;
-  padding: 0 48px;
+  position:relative; height:100dvh; min-height:600px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden; text-align:center; padding:0 48px;
+  background:var(--bg);
+}
+/* checker bg in CTA */
+.cta-ck-bg {
+  position:absolute; inset:0; pointer-events:none;
+  background-image:repeating-conic-gradient(rgba(255,128,0,.025) 0% 25%,transparent 0% 50%);
+  background-size:80px 80px;
 }
 .cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, rgba(255,128,0,0.1) 0%, transparent 60%);
-  pointer-events: none;
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(255,128,0,.09) 0%,transparent 65%);
 }
-
-.cta-speed-lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
+.cta .slines { z-index:1; }
+.cta-inner { position:relative; z-index:2; }
+.cta-label { font-family:var(--display); font-size:11px; font-weight:600; letter-spacing:.35em; text-transform:uppercase; color:var(--orange); margin-bottom:24px; opacity:0; transform:translateY(18px); }
+.cta.vis .cta-label { animation:su .7s cubic-bezier(.16,1,.3,1) .1s forwards; }
+.cta-h2 {
+  font-family:var(--display); font-size:clamp(64px,14vw,210px); font-weight:900;
+  text-transform:uppercase; letter-spacing:-.03em; line-height:.88; margin-bottom:40px;
+  clip-path:inset(0 100% 0 0);
 }
-.cta-speed-lines span {
-  position: absolute;
-  left: -100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,128,0,0.5), transparent);
-  animation: speed-sweep linear infinite;
-}
-.cta-speed-lines span:nth-child(1) { top: 25%; width: 80%; animation-duration: 1.8s; animation-delay: 0s; }
-.cta-speed-lines span:nth-child(2) { top: 45%; width: 100%; animation-duration: 2.2s; animation-delay: 0.3s; }
-.cta-speed-lines span:nth-child(3) { top: 55%; width: 90%; animation-duration: 1.5s; animation-delay: 0.8s; }
-.cta-speed-lines span:nth-child(4) { top: 72%; width: 70%; animation-duration: 2.5s; animation-delay: 0.5s; }
-
-.cta-label {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 24px;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.cta.visible .cta-label {
-  animation: slide-up 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
-}
-.cta-title {
-  font-family: var(--font-display);
-  font-size: clamp(64px, 13vw, 200px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 0.88;
-  margin-bottom: 40px;
-  clip-path: inset(0 100% 0 0);
-}
-.cta.visible .cta-title {
-  transition: clip-path 1s cubic-bezier(0.16,1,0.3,1) 0.3s;
-  clip-path: inset(0 0% 0 0);
-}
-
-.cta-sub {
-  font-size: 15px;
-  font-weight: 300;
-  color: var(--gray);
-  letter-spacing: 0.08em;
-  margin-bottom: 48px;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.cta.visible .cta-sub {
-  animation: slide-up 0.7s cubic-bezier(0.16,1,0.3,1) 0.7s forwards;
-}
-
+.cta.vis .cta-h2 { transition:clip-path 1s cubic-bezier(.16,1,.3,1) .3s; clip-path:inset(0 0% 0 0); }
+.cta-sub { font-size:15px; font-weight:300; color:var(--gray); letter-spacing:.06em; margin-bottom:52px; opacity:0; transform:translateY(16px); }
+.cta.vis .cta-sub { animation:su .7s cubic-bezier(.16,1,.3,1) .7s forwards; }
 .cta-btn {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--bg);
-  background: var(--orange);
-  border: 2px solid var(--orange);
-  padding: 16px 48px;
-  cursor: none;
-  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
-  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
-  opacity: 0;
-  transform: translateY(20px);
+  font-family:var(--display); font-size:14px; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--bg); background:var(--orange); border:2px solid var(--orange); padding:18px 56px; cursor:none;
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);
+  transition:background .25s,color .25s,box-shadow .25s;
+  opacity:0; transform:translateY(16px);
 }
-.cta.visible .cta-btn {
-  animation: slide-up 0.7s cubic-bezier(0.16,1,0.3,1) 0.9s forwards;
+.cta.vis .cta-btn { animation:su .7s cubic-bezier(.16,1,.3,1) .9s forwards; }
+.cta-btn:hover { background:transparent; color:var(--orange); box-shadow:0 0 50px rgba(255,128,0,.35); }
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+footer {
+  padding:28px 56px; border-top:1px solid #1a1a1a;
+  display:flex; align-items:center; justify-content:space-between; background:var(--bg);
 }
-.cta-btn:hover {
-  background: transparent;
-  color: var(--orange);
-  box-shadow: 0 0 40px rgba(255,128,0,0.3);
+.f-logo { font-family:var(--display); font-size:16px; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+.f-copy { font-size:12px; color:var(--gray); }
+.f-links { display:flex; gap:28px; list-style:none; }
+.f-links a { font-family:var(--display); font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gray); text-decoration:none; transition:color .2s; }
+.f-links a:hover { color:var(--white); }
+
+/* ── GLITCH ─────────────────────────────────────────────── */
+.glitch { position:relative; display:inline-block; }
+.glitch::before,.glitch::after {
+  content:attr(data-text); position:absolute; top:0; left:0; width:100%;
+  font-family:inherit; font-size:inherit; font-weight:inherit; line-height:inherit;
+  text-transform:inherit; letter-spacing:inherit; pointer-events:none;
+}
+.glitch::before { color:#ff2d2d; animation:g1 7s steps(1) infinite; }
+.glitch::after  { color:#00d4ff; animation:g2 7s steps(1) infinite; animation-delay:.35s; }
+@keyframes g1 {
+  0%,88%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+  90%{clip-path:inset(15% 0 65% 0);transform:translate(-4px,2px)}
+  92%{clip-path:inset(55% 0 25% 0);transform:translate(4px,-2px)}
+  94%{clip-path:inset(30% 0 50% 0);transform:translate(-2px,4px)}
+  96%{clip-path:inset(75% 0 5% 0);transform:translate(3px,-3px)}
+}
+@keyframes g2 {
+  0%,88%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+  90%{clip-path:inset(65% 0 15% 0);transform:translate(4px,-2px)}
+  92%{clip-path:inset(20% 0 60% 0);transform:translate(-4px,2px)}
+  94%{clip-path:inset(40% 0 40% 0);transform:translate(2px,-4px)}
+  96%{clip-path:inset(5% 0 75% 0);transform:translate(-3px,3px)}
 }
 
-.footer {
-  padding: 32px 48px;
-  border-top: 1px solid var(--gray-dim);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg);
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:960px){
+  nav{padding:0 24px;} .nav-links{display:none;}
+  .hero{padding:0 24px 64px;} .scroll-cue{left:24px;}
+  .car-wrap{width:95%;right:-10%;bottom:5px;}
+  .drivers{grid-template-columns:1fr;}
+  .d-card:last-child{border-left:none;border-top:1px solid #1e1e1e;}
+  .d-div{display:none;}
+  .performance{padding:80px 24px;} .stats-grid{grid-template-columns:1fr 1fr;}
+  .season{padding:80px 24px;} .season-hd{flex-direction:column;align-items:flex-start;gap:12px;}
+  .tech{padding:80px 24px;} .tech-grid{grid-template-columns:1fr;}
+  .cta{padding:0 24px;}
+  footer{padding:24px;flex-direction:column;gap:16px;text-align:center;}
+  .f-links{justify-content:center;}
 }
-.footer-logo {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-.footer-copy {
-  font-size: 12px;
-  color: var(--gray);
-  letter-spacing: 0.08em;
-}
-.footer-links {
-  display: flex;
-  gap: 28px;
-  list-style: none;
-}
-.footer-links a {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gray);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.footer-links a:hover { color: var(--white); }
-
-/* ─── GLITCH KEYFRAMES ───────────────────────────────────────── */
-@keyframes glitch-1 {
-  0%, 90%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
-  92% { clip-path: inset(20% 0 60% 0); transform: translate(-4px, 2px); }
-  94% { clip-path: inset(50% 0 30% 0); transform: translate(4px, -2px); }
-  96% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 4px); }
-  98% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -4px); }
-}
-@keyframes glitch-2 {
-  0%, 90%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
-  92% { clip-path: inset(60% 0 20% 0); transform: translate(4px, -2px); }
-  94% { clip-path: inset(30% 0 50% 0); transform: translate(-4px, 2px); }
-  96% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -4px); }
-  98% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 4px); }
-}
-
-.glitch {
-  position: relative;
-  display: inline-block;
-}
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  line-height: inherit;
-  width: 100%;
-  pointer-events: none;
-}
-.glitch::before {
-  color: #ff3c3c;
-  animation: glitch-1 6s steps(1) infinite;
-}
-.glitch::after {
-  color: #00d4ff;
-  animation: glitch-2 6s steps(1) infinite;
-  animation-delay: 0.3s;
-}
-
-/* ─── RESPONSIVE ─────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  nav { padding: 0 24px; }
-  .nav-links { display: none; }
-
-  .hero { padding: 0 24px 64px; }
-  .scroll-indicator { right: 24px; }
-
-  .drivers { grid-template-columns: 1fr; }
-  .drivers-divider { display: none; }
-  .driver-card { min-height: 50dvh; padding: 48px 28px; }
-  .driver-card:last-child { border-left: none; border-top: 1px solid var(--gray-dim); }
-
-  .performance { padding: 80px 24px; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-
-  .season { padding: 80px 24px; }
-  .season-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-
-  .technology { padding: 80px 24px; }
-  .tech-grid { grid-template-columns: 1fr; }
-
-  .cta { padding: 0 24px; }
-  .footer { padding: 28px 24px; flex-direction: column; gap: 20px; text-align: center; }
-  .footer-links { justify-content: center; }
-}
-
-@media (max-width: 480px) {
-  .stats-grid { grid-template-columns: 1fr; }
-  .hero-sub { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .hero-divider { display: none; }
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr;}
+  .hero-sub{flex-direction:column;align-items:flex-start;gap:12px;}
 }
 </style>
 </head>
-
 <body>
 
-<!-- Custom cursor -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<!-- Scroll progress -->
+<div id="progress"></div>
 
-<!-- Grain overlay -->
+<!-- Cursor -->
+<div id="cur"></div>
+<div id="ring"></div>
+
+<!-- Grain -->
 <div id="grain"></div>
 
-<!-- ─── NAV ─────────────────────────────── -->
+<!-- Checkerboard entrance overlay -->
+<div id="checker"></div>
+
+<!-- ── NAV ──────────────────────────────────── -->
 <nav id="nav">
-  <a class="nav-logo" href="#">MCL<span>38</span></a>
+  <a class="nav-logo" href="#">MCL<em>38</em></a>
   <ul class="nav-links">
     <li><a href="#drivers">Drivers</a></li>
     <li><a href="#performance">Performance</a></li>
     <li><a href="#season">Season</a></li>
-    <li><a href="#technology">Technology</a></li>
+    <li><a href="#tech">Technology</a></li>
   </ul>
-  <button class="nav-cta">Join the Race</button>
+  <button class="nav-btn magnetic">Join the Race</button>
 </nav>
 
-<!-- ─── HERO ─────────────────────────────── -->
+<!-- ── HERO ─────────────────────────────────── -->
 <section class="hero" id="hero">
-  <div class="speed-lines" aria-hidden="true">
-    <span></span><span></span><span></span>
+  <div class="hero-checker-bg"></div>
+  <div class="slines" aria-hidden="true">
     <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span>
   </div>
 
-  <div class="hero-ghost-num" aria-hidden="true">4</div>
+  <!-- F1 Car SVG -->
+  <div class="car-wrap">
+    <svg class="car-svg" viewBox="0 0 1000 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Speed trail behind car -->
+      <defs>
+        <linearGradient id="trail" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#FF8000" stop-opacity="0"/>
+          <stop offset="60%" stop-color="#FF8000" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#FF8000" stop-opacity="0.0"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
 
+      <!-- Rear wing ─ main plate -->
+      <rect x="828" y="54" width="115" height="15" rx="4" fill="#FF8000"/>
+      <!-- Rear wing ─ endplates -->
+      <rect x="828" y="54" width="8" height="72" rx="2" fill="#FF8000"/>
+      <rect x="935" y="54" width="8" height="72" rx="2" fill="#FF8000"/>
+      <!-- Rear wing ─ DRS column -->
+      <rect x="858" y="69" width="14" height="50" rx="2" fill="#FF8000"/>
+      <!-- Beam wing -->
+      <rect x="835" y="104" width="78" height="10" rx="2" fill="#e07000"/>
+
+      <!-- Main body -->
+      <path d="
+        M 108 215
+        L 124 188
+        L 152 162
+        L 218 136
+        L 312 118
+        L 378 108
+        L 408 98
+        L 440 92
+        L 475 94
+        L 555 106
+        L 655 120
+        L 745 138
+        L 808 155
+        L 838 168
+        L 850 188
+        L 850 218
+        Z
+      " fill="#FF8000"/>
+
+      <!-- Sidepod detail (darker panel) -->
+      <path d="M 520 106 Q 560 118 570 132 Q 540 138 505 130 Q 500 118 520 106 Z" fill="#cc6400"/>
+
+      <!-- Nose cone -->
+      <path d="M 22 212 L 108 215 L 108 222 L 22 220 Z" fill="#FF8000"/>
+      <!-- Nose tip accent -->
+      <path d="M 6 216 L 22 212 L 22 220 L 6 216 Z" fill="#cc6400"/>
+
+      <!-- Front wing ─ main plate (close to ground) -->
+      <path d="M 2 224 L 120 224 L 120 232 L 2 229 Z" fill="#FF8000"/>
+      <!-- Front wing ─ vertical stay -->
+      <rect x="100" y="209" width="10" height="18" rx="1" fill="#FF8000"/>
+      <!-- Front wing ─ small upper element -->
+      <path d="M 20 218 L 110 218 L 110 221 L 20 220 Z" fill="#e07000"/>
+
+      <!-- Cockpit (dark opening) -->
+      <path d="M 375 108 L 396 76 L 458 72 L 490 95 Z" fill="#111111"/>
+      <!-- Halo arch -->
+      <path d="M 379 78 Q 432 50 488 76" stroke="#0d0d0d" fill="none" stroke-width="12" stroke-linecap="round"/>
+      <!-- Halo highlight -->
+      <path d="M 380 76 Q 432 52 487 74" stroke="rgba(255,255,255,0.06)" fill="none" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- Air intake bump above cockpit -->
+      <ellipse cx="448" cy="86" rx="34" ry="13" fill="#1a1a1a"/>
+
+      <!-- Engine cover ridge -->
+      <path d="M 475 94 L 520 95 L 520 102 L 475 100 Z" fill="#cc6400"/>
+
+      <!-- Rear diffuser -->
+      <path d="M 818 185 L 870 194 L 870 218 L 818 218 Z" fill="#cc6400"/>
+
+      <!-- Front wheel ─ tire -->
+      <circle cx="202" cy="226" r="48" fill="#181818"/>
+      <circle cx="202" cy="226" r="46" fill="none" stroke="#2a2a2a" stroke-width="4"/>
+      <!-- Front wheel ─ rim -->
+      <circle cx="202" cy="226" r="26" fill="#252525"/>
+      <circle cx="202" cy="226" r="22" fill="#1e1e1e"/>
+      <!-- Wheel spokes -->
+      <line x1="202" y1="204" x2="202" y2="248" stroke="#383838" stroke-width="3"/>
+      <line x1="180" y1="213" x2="224" y2="239" stroke="#383838" stroke-width="3"/>
+      <line x1="180" y1="239" x2="224" y2="213" stroke="#383838" stroke-width="3"/>
+      <circle cx="202" cy="226" r="6" fill="#444"/>
+
+      <!-- Rear wheel ─ tire -->
+      <circle cx="740" cy="224" r="50" fill="#181818"/>
+      <circle cx="740" cy="224" r="48" fill="none" stroke="#2a2a2a" stroke-width="4"/>
+      <!-- Rear wheel ─ rim (larger) -->
+      <circle cx="740" cy="224" r="28" fill="#252525"/>
+      <circle cx="740" cy="224" r="24" fill="#1e1e1e"/>
+      <!-- Wheel spokes -->
+      <line x1="740" y1="200" x2="740" y2="248" stroke="#383838" stroke-width="3"/>
+      <line x1="716" y1="211" x2="764" y2="237" stroke="#383838" stroke-width="3"/>
+      <line x1="716" y1="237" x2="764" y2="211" stroke="#383838" stroke-width="3"/>
+      <circle cx="740" cy="224" r="7" fill="#444"/>
+
+      <!-- Race number on sidepod -->
+      <text x="572" y="148" font-family="Barlow Condensed,Impact,sans-serif" font-weight="900" font-size="56" fill="white" fill-opacity="0.92" filter="url(#glow)">4</text>
+
+      <!-- McLaren wordmark hint -->
+      <rect x="310" y="140" width="50" height="6" rx="3" fill="white" fill-opacity="0.18"/>
+
+      <!-- Ground shadow -->
+      <ellipse cx="480" cy="255" rx="420" ry="6" fill="rgba(0,0,0,0.6)"/>
+    </svg>
+  </div>
+
+  <!-- Hero text -->
   <div class="hero-content">
-    <p class="hero-eyebrow">2024 · FIA Formula One World Championship</p>
-    <h1 class="hero-title">
-      <span class="hero-title-line"><span class="glitch" data-text="BUILT">BUILT</span></span>
-      <span class="hero-title-line"><span>TO</span></span>
-      <span class="hero-title-line"><span class="title-orange">WIN.</span></span>
+    <p class="hero-eye">2024 · FIA Formula One World Championship</p>
+    <h1 class="hero-h1">
+      <span class="hl"><span class="glitch" data-text="BUILT">BUILT</span></span>
+      <span class="hl"><span>TO</span></span>
+      <span class="hl"><span class="orange">WIN.</span></span>
     </h1>
     <div class="hero-sub">
-      <span class="hero-driver"><strong>#4</strong> · Lando Norris</span>
-      <div class="hero-divider"></div>
-      <span class="hero-driver"><strong>#81</strong> · Oscar Piastri</span>
+      <strong>#4</strong>&nbsp;Lando Norris
+      <div class="hero-sub-div"></div>
+      <strong>#81</strong>&nbsp;Oscar Piastri
     </div>
   </div>
 
-  <div class="scroll-indicator" aria-hidden="true">
+  <div class="scroll-cue">
     <span>Scroll</span>
-    <div class="scroll-indicator-line"></div>
+    <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- ─── TICKER ────────────────────────────── -->
-<div class="ticker-wrap" aria-hidden="true">
-  <div class="ticker-track">
-    <!-- duplicated for seamless loop -->
-    <div class="ticker-item">0–100 KM/H IN 2.4S <span class="ticker-dot"></span> 340 KM/H TOP SPEED <span class="ticker-dot"></span> MCL38 <span class="ticker-dot"></span> LANDO NORRIS #4 <span class="ticker-dot"></span> OSCAR PIASTRI #81 <span class="ticker-dot"></span> 23 RACE SEASON <span class="ticker-dot"></span> PAPAYA LIVES <span class="ticker-dot"></span></div>
-    <div class="ticker-item">0–100 KM/H IN 2.4S <span class="ticker-dot"></span> 340 KM/H TOP SPEED <span class="ticker-dot"></span> MCL38 <span class="ticker-dot"></span> LANDO NORRIS #4 <span class="ticker-dot"></span> OSCAR PIASTRI #81 <span class="ticker-dot"></span> 23 RACE SEASON <span class="ticker-dot"></span> PAPAYA LIVES <span class="ticker-dot"></span></div>
+<!-- ── TICKER ───────────────────────────────── -->
+<div class="ticker">
+  <div class="t-track">
+    <div class="t-item">0–100 KM/H IN 2.4S <span class="t-dot"></span> 340 KM/H TOP SPEED <span class="t-dot"></span> MCL38 <span class="t-dot"></span> LANDO NORRIS #4 <span class="t-dot"></span> OSCAR PIASTRI #81 <span class="t-dot"></span> PAPAYA LIVES <span class="t-dot"></span> 2024 CONSTRUCTORS RUNNERS-UP <span class="t-dot"></span></div>
+    <div class="t-item">0–100 KM/H IN 2.4S <span class="t-dot"></span> 340 KM/H TOP SPEED <span class="t-dot"></span> MCL38 <span class="t-dot"></span> LANDO NORRIS #4 <span class="t-dot"></span> OSCAR PIASTRI #81 <span class="t-dot"></span> PAPAYA LIVES <span class="t-dot"></span> 2024 CONSTRUCTORS RUNNERS-UP <span class="t-dot"></span></div>
   </div>
 </div>
 
-<!-- ─── DRIVERS ───────────────────────────── -->
+<!-- ── DRIVERS ───────────────────────────────── -->
 <section class="drivers" id="drivers">
-  <div class="drivers-divider" id="driversDivider"></div>
+  <div class="d-div" id="dDiv"></div>
 
-  <div class="driver-card" id="driverNorris">
-    <div class="driver-ghost" aria-hidden="true">4</div>
-    <div class="driver-number">Driver #04</div>
-    <h2 class="driver-name">Lando<br>Norris</h2>
-    <div class="driver-stats">
-      <div class="driver-stat-item">
-        <span class="driver-stat-value">6</span>
-        <span class="driver-stat-label">Race Wins</span>
-      </div>
-      <div class="driver-stat-item">
-        <span class="driver-stat-value">24</span>
-        <span class="driver-stat-label">Podiums</span>
-      </div>
-      <div class="driver-stat-item">
-        <span class="driver-stat-value">UK</span>
-        <span class="driver-stat-label">Nationality</span>
-      </div>
+  <div class="d-card rv-l" id="dN">
+    <div class="d-num-bg">4</div>
+    <div class="d-tag">Driver #04</div>
+    <h2 class="d-name">Lando<br>Norris</h2>
+    <div class="d-stats">
+      <div><div class="d-sv">6</div><div class="d-sl">Race Wins</div></div>
+      <div><div class="d-sv">24</div><div class="d-sl">Podiums</div></div>
+      <div><div class="d-sv">UK</div><div class="d-sl">Nation</div></div>
     </div>
   </div>
 
-  <div class="driver-card" id="driverPiastri">
-    <div class="driver-ghost" aria-hidden="true">81</div>
-    <div class="driver-number">Driver #81</div>
-    <h2 class="driver-name">Oscar<br>Piastri</h2>
-    <div class="driver-stats">
-      <div class="driver-stat-item">
-        <span class="driver-stat-value">2</span>
-        <span class="driver-stat-label">Race Wins</span>
-      </div>
-      <div class="driver-stat-item">
-        <span class="driver-stat-value">12</span>
-        <span class="driver-stat-label">Podiums</span>
-      </div>
-      <div class="driver-stat-item">
-        <span class="driver-stat-value">AU</span>
-        <span class="driver-stat-label">Nationality</span>
-      </div>
+  <div class="d-card rv-r" id="dP">
+    <div class="d-num-bg">81</div>
+    <div class="d-tag">Driver #81</div>
+    <h2 class="d-name">Oscar<br>Piastri</h2>
+    <div class="d-stats">
+      <div><div class="d-sv">2</div><div class="d-sl">Race Wins</div></div>
+      <div><div class="d-sv">12</div><div class="d-sl">Podiums</div></div>
+      <div><div class="d-sv">AU</div><div class="d-sl">Nation</div></div>
     </div>
   </div>
 </section>
 
-<!-- ─── PERFORMANCE ───────────────────────── -->
+<!-- ── CHECKER REVEAL BAND ───────────────────── -->
+<div class="checker-reveal" id="ckReveal">
+  <div class="ck-grid" id="ckGrid"></div>
+  <div class="checker-reveal-text">MCL38 · PAPAYA LIVES</div>
+</div>
+
+<!-- ── PERFORMANCE ───────────────────────────── -->
 <section class="performance" id="performance">
-  <div class="perf-lines" aria-hidden="true">
-    <span></span><span></span><span></span>
-  </div>
-  <div class="performance-header">
-    <p class="section-label reveal" data-delay="0">By the numbers</p>
-    <h2 class="performance-title reveal" data-delay="100">
+  <div class="perf-slines"><span></span><span></span><span></span></div>
+  <div class="perf-head">
+    <div class="sec-label rv" data-d="0">By the numbers</div>
+    <h2 class="big-title rv" data-d="80">
       <span class="glitch" data-text="MACHINE">MACHINE</span><br>
       PRECISION
     </h2>
   </div>
   <div class="stats-grid">
-    <div class="stat-block reveal" data-delay="0">
-      <div class="stat-num" data-count="340" data-suffix="">0</div>
-      <div class="stat-unit">KM/H</div>
-      <div class="stat-label">Top Speed</div>
+    <div class="s-block rv" data-d="0">
+      <div class="s-n" data-count="340" data-sfx="">0</div>
+      <div class="s-u">KM/H</div>
+      <div class="s-l">Top Speed</div>
     </div>
-    <div class="stat-block reveal" data-delay="100">
-      <div class="stat-num" data-count="2" data-decimal=".4" data-suffix="">0</div>
-      <div class="stat-unit">Seconds</div>
-      <div class="stat-label">0–100 KM/H</div>
+    <div class="s-block rv" data-d="100">
+      <div class="s-n" data-count="2" data-dec=".4" data-sfx="">0</div>
+      <div class="s-u">Seconds</div>
+      <div class="s-l">0–100 KM/H</div>
     </div>
-    <div class="stat-block reveal" data-delay="200">
-      <div class="stat-num" data-count="1000" data-suffix="+">0</div>
-      <div class="stat-unit">BHP</div>
-      <div class="stat-label">Power Output</div>
+    <div class="s-block rv" data-d="200">
+      <div class="s-n" data-count="1000" data-sfx="+">0</div>
+      <div class="s-u">BHP</div>
+      <div class="s-l">Power Output</div>
     </div>
-    <div class="stat-block reveal" data-delay="300">
-      <div class="stat-num" data-count="23" data-suffix="">0</div>
-      <div class="stat-unit">Races</div>
-      <div class="stat-label">2024 Season</div>
+    <div class="s-block rv" data-d="300">
+      <div class="s-n" data-count="23" data-sfx="">0</div>
+      <div class="s-u">Races</div>
+      <div class="s-l">2024 Season</div>
     </div>
   </div>
 </section>
 
-<!-- ─── SEASON ────────────────────────────── -->
+<!-- ── SEASON ────────────────────────────────── -->
 <section class="season" id="season">
-  <div class="season-header">
+  <div class="season-hd">
     <div>
-      <p class="section-label reveal" data-delay="0">2024 Campaign</p>
-      <h2 class="season-title reveal" data-delay="100">RACE<br>RESULTS</h2>
+      <div class="sec-label rv" data-d="0">2024 Campaign</div>
+      <h2 class="big-title rv" data-d="80">RACE<br>RESULTS</h2>
     </div>
-    <div class="season-scroll-hint reveal" data-delay="200">Scroll races</div>
+    <div class="season-hint rv" data-d="160">Scroll races</div>
   </div>
-
-  <div class="race-timeline reveal" data-delay="200">
-    <div class="race-card p2">
-      <div class="race-round">Round 01</div>
-      <div class="race-name">Bahrain<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P2</span>
-        <span class="race-position-label">Norris</span>
-      </div>
-      <div class="race-driver">Piastri P5</div>
+  <div class="race-row rv" data-d="200">
+    <div class="r-card p2">
+      <div class="r-rd">Round 01</div><div class="r-nm">Bahrain<br>Grand Prix</div>
+      <div class="r-pos">P2</div><div class="r-pl">Norris</div><div class="r-dr">Piastri P5</div>
     </div>
-    <div class="race-card">
-      <div class="race-round">Round 04</div>
-      <div class="race-name">Japanese<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P3</span>
-        <span class="race-position-label">Norris</span>
-      </div>
-      <div class="race-driver">Piastri P4</div>
+    <div class="r-card">
+      <div class="r-rd">Round 04</div><div class="r-nm">Japanese<br>Grand Prix</div>
+      <div class="r-pos">P3</div><div class="r-pl">Norris</div><div class="r-dr">Piastri P4</div>
     </div>
-    <div class="race-card p1">
-      <div class="race-round">Round 06</div>
-      <div class="race-name">Miami<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P1</span>
-        <span class="race-position-label">Norris</span>
-      </div>
-      <div class="race-driver">Piastri P3</div>
+    <div class="r-card p1">
+      <div class="r-rd">Round 06</div><div class="r-nm">Miami<br>Grand Prix</div>
+      <div class="r-pos">P1</div><div class="r-pl">Norris</div><div class="r-dr">Piastri P3</div>
     </div>
-    <div class="race-card p1">
-      <div class="race-round">Round 08</div>
-      <div class="race-name">Monaco<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P1</span>
-        <span class="race-position-label">Piastri</span>
-      </div>
-      <div class="race-driver">Norris P2</div>
+    <div class="r-card p1">
+      <div class="r-rd">Round 08</div><div class="r-nm">Monaco<br>Grand Prix</div>
+      <div class="r-pos">P1</div><div class="r-pl">Piastri</div><div class="r-dr">Norris P2</div>
     </div>
-    <div class="race-card p2">
-      <div class="race-round">Round 10</div>
-      <div class="race-name">British<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P2</span>
-        <span class="race-position-label">Norris</span>
-      </div>
-      <div class="race-driver">Piastri P5</div>
+    <div class="r-card p2">
+      <div class="r-rd">Round 10</div><div class="r-nm">British<br>Grand Prix</div>
+      <div class="r-pos">P2</div><div class="r-pl">Norris</div><div class="r-dr">Piastri P5</div>
     </div>
-    <div class="race-card p1">
-      <div class="race-round">Round 15</div>
-      <div class="race-name">Italian<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P1</span>
-        <span class="race-position-label">Piastri</span>
-      </div>
-      <div class="race-driver">Norris P2</div>
+    <div class="r-card p1">
+      <div class="r-rd">Round 15</div><div class="r-nm">Italian<br>Grand Prix</div>
+      <div class="r-pos">P1</div><div class="r-pl">Piastri</div><div class="r-dr">Norris P2</div>
     </div>
-    <div class="race-card p1">
-      <div class="race-round">Round 19</div>
-      <div class="race-name">Singapore<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P1</span>
-        <span class="race-position-label">Norris</span>
-      </div>
-      <div class="race-driver">Piastri P4</div>
+    <div class="r-card p1">
+      <div class="r-rd">Round 19</div><div class="r-nm">Singapore<br>Grand Prix</div>
+      <div class="r-pos">P1</div><div class="r-pl">Norris</div><div class="r-dr">Piastri P4</div>
     </div>
-    <div class="race-card p1">
-      <div class="race-round">Round 22</div>
-      <div class="race-name">Abu Dhabi<br>Grand Prix</div>
-      <div class="race-result">
-        <span class="race-position">P1</span>
-        <span class="race-position-label">Piastri</span>
-      </div>
-      <div class="race-driver">Norris P2</div>
+    <div class="r-card p1">
+      <div class="r-rd">Round 22</div><div class="r-nm">Abu Dhabi<br>Grand Prix</div>
+      <div class="r-pos">P1</div><div class="r-pl">Piastri</div><div class="r-dr">Norris P2</div>
     </div>
   </div>
 </section>
 
-<!-- ─── TECHNOLOGY ────────────────────────── -->
-<section class="technology" id="technology">
-  <p class="section-label reveal" data-delay="0">Engineering</p>
-  <h2 class="technology-title reveal" data-delay="100">
-    THE <span class="title-orange">MCL38</span>
-  </h2>
+<!-- ── TECHNOLOGY ────────────────────────────── -->
+<section class="tech" id="tech">
+  <div class="sec-label rv" data-d="0">Engineering</div>
+  <h2 class="big-title tech-title rv" data-d="80">THE <span class="orange">MCL38</span></h2>
   <div class="tech-grid">
-    <div class="tech-card reveal" data-delay="0">
-      <div class="tech-card-inner">
-        <div class="tech-icon">⬡</div>
-        <div class="tech-name">Aerodynamics</div>
-        <div class="tech-stat">10,500+</div>
-        <div class="stat-label" style="margin-bottom:16px">Components</div>
-        <p class="tech-desc">Every surface sculpted by airflow simulation — ground effect aerodynamics generating 3.5G of downforce at race speed.</p>
+    <div class="t-card rv" data-d="0">
+      <div class="t-card-in">
+        <div class="t-ico">⬡</div>
+        <div class="t-nm">Aero</div>
+        <div class="t-st">10,500+</div>
+        <div class="s-l" style="margin-bottom:14px">Components</div>
+        <p class="t-desc">Ground effect aerodynamics generating up to 3.5G of downforce. Every millimetre sculpted in CFD simulation.</p>
       </div>
     </div>
-    <div class="tech-card reveal" data-delay="150">
-      <div class="tech-card-inner">
-        <div class="tech-icon">⚡</div>
-        <div class="tech-name">Power Unit</div>
-        <div class="tech-stat">1,000 BHP</div>
-        <div class="stat-label" style="margin-bottom:16px">Combined Output</div>
-        <p class="tech-desc">Mercedes hybrid power unit delivering over 1,000 brake horsepower from a 1.6L turbocharged V6 and MGU-K unit.</p>
+    <div class="t-card rv" data-d="140">
+      <div class="t-card-in">
+        <div class="t-ico">⚡</div>
+        <div class="t-nm">Power</div>
+        <div class="t-st">1,000 BHP</div>
+        <div class="s-l" style="margin-bottom:14px">Combined Output</div>
+        <p class="t-desc">Mercedes 1.6L turbocharged V6 hybrid — over 1,000 brake horsepower delivered to a car weighing less than 800 kg.</p>
       </div>
     </div>
-    <div class="tech-card reveal" data-delay="300">
-      <div class="tech-card-inner">
-        <div class="tech-icon">◈</div>
-        <div class="tech-name">Chassis</div>
-        <div class="tech-stat">798 KG</div>
-        <div class="stat-label" style="margin-bottom:16px">Minimum Weight</div>
-        <p class="tech-desc">Carbon fibre monocoque designed to withstand 40G impacts, protecting the driver while maintaining optimal weight distribution.</p>
+    <div class="t-card rv" data-d="280">
+      <div class="t-card-in">
+        <div class="t-ico">◈</div>
+        <div class="t-nm">Chassis</div>
+        <div class="t-st">798 KG</div>
+        <div class="s-l" style="margin-bottom:14px">Minimum Weight</div>
+        <p class="t-desc">Carbon fibre monocoque designed to survive 40G impacts while keeping the weight balance within 0.1% tolerance.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── CTA ───────────────────────────────── -->
+<!-- ── CTA ───────────────────────────────────── -->
 <section class="cta" id="cta">
-  <div class="cta-speed-lines" aria-hidden="true">
-    <span></span><span></span><span></span><span></span>
+  <div class="cta-ck-bg"></div>
+  <div class="slines"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="cta-inner">
+    <p class="cta-label">McLaren Racing · 2024</p>
+    <h2 class="cta-h2">FEEL<br>THE<br><span class="orange">SPEED</span></h2>
+    <p class="cta-sub">Follow the 2024 McLaren F1 season — every lap, every corner, every win.</p>
+    <button class="cta-btn magnetic">Experience the Season</button>
   </div>
-  <p class="cta-label">McLaren Racing · 2024</p>
-  <h2 class="cta-title">FEEL<br>THE<br>SPEED</h2>
-  <p class="cta-sub">Follow the 2024 McLaren F1 season — every lap, every corner, every win.</p>
-  <button class="cta-btn">Experience the Season</button>
 </section>
 
-<!-- ─── FOOTER ────────────────────────────── -->
-<footer class="footer">
-  <div class="footer-logo">MCL<span style="color:var(--orange)">38</span></div>
-  <p class="footer-copy">© 2024 McLaren Racing Limited. All rights reserved.</p>
-  <ul class="footer-links">
+<!-- ── FOOTER ────────────────────────────────── -->
+<footer>
+  <div class="f-logo">MCL<span class="orange">38</span></div>
+  <p class="f-copy">© 2024 McLaren Racing Limited. All rights reserved.</p>
+  <ul class="f-links">
     <li><a href="#">Privacy</a></li>
     <li><a href="#">Terms</a></li>
     <li><a href="#">Contact</a></li>
@@ -1341,146 +870,229 @@ section { position: relative; overflow: hidden; }
 </footer>
 
 <script>
-// ─── CURSOR LERP ──────────────────────────
-const cursor = document.getElementById('cursor');
-const ring   = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-function animateCursor() {
-  // dot: instant
-  cursor.style.left = mx + 'px';
-  cursor.style.top  = my + 'px';
-  // ring: lerp
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px';
-  ring.style.top  = ry + 'px';
-  requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
-// ─── NAV SCROLL ──────────────────────────
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-}, { passive: true });
-
-// ─── INTERSECTION OBSERVER ────────────────
-const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const delay = parseInt(entry.target.dataset.delay || 0);
-    setTimeout(() => {
-      entry.target.classList.add('visible');
-    }, delay);
-    io.unobserve(entry.target);
-  });
-}, { threshold: 0.12 });
-revealEls.forEach(el => io.observe(el));
-
-// ─── DRIVER CARDS REVEAL ──────────────────
-const driverCards = document.querySelectorAll('.driver-card');
-const driversIo = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      driversIo.unobserve(entry.target);
+// ── CHECKERBOARD ENTRANCE ────────────────────
+(function(){
+  const ck = document.getElementById('checker');
+  const cols = 12, rows = 7;
+  const tiles = [];
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const t = document.createElement('div');
+      t.className = 'ck';
+      t.style.background = (r+c)%2===0 ? '#FF8000' : '#050505';
+      const d = (r+c)*0.04;
+      t.style.animationName = 'ck-in';
+      t.style.animationDelay = d+'s';
+      tiles.push({el:t, delay:d});
+      ck.appendChild(t);
     }
-  });
-}, { threshold: 0.2 });
-driverCards.forEach(c => driversIo.observe(c));
-
-// drivers divider
-const divider = document.getElementById('driversDivider');
-const divIo = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting) {
-    divider.classList.add('visible');
-    divIo.unobserve(divider);
   }
-}, { threshold: 0.3 });
-divIo.observe(divider);
-
-// ─── DRIVER CARD 3D TILT ─────────────────
-driverCards.forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const cx   = rect.left + rect.width  / 2;
-    const cy   = rect.top  + rect.height / 2;
-    const dx   = (e.clientX - cx) / (rect.width  / 2);
-    const dy   = (e.clientY - cy) / (rect.height / 2);
-    card.style.transform = `perspective(1200px) rotateY(${dx * 4}deg) rotateX(${-dy * 3}deg)`;
+  // after all in, animate out
+  const maxIn = (cols+rows-2)*0.04 + 0.5;
+  tiles.forEach(({el,delay}) => {
+    const outDelay = maxIn + delay*0.7;
+    setTimeout(()=>{
+      el.style.animationName = 'ck-out';
+      el.style.animationDelay = '0s';
+    }, outDelay*1000);
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-    card.style.transform  = 'perspective(1200px) rotateY(0deg) rotateX(0deg)';
-    setTimeout(() => card.style.transition = '', 600);
+  // remove overlay
+  const totalTime = maxIn + (cols+rows-2)*0.04*0.7 + 0.8;
+  setTimeout(()=>{ ck.style.display='none'; }, totalTime*1000);
+})();
+
+// ── CHECKER REVEAL SECTION ───────────────────
+(function(){
+  const grid = document.getElementById('ckGrid');
+  const cols=16, rows=4;
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const t=document.createElement('div');
+      t.className='ck-tile';
+      t.style.background=(r+c)%2===0?'#FF8000':'#0d0d0d';
+      const d=(r+c)*0.025;
+      t.style.transitionDelay=d+'s';
+      grid.appendChild(t);
+    }
+  }
+})();
+
+// ── SCROLL PROGRESS ──────────────────────────
+const prog = document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  prog.style.width = pct+'%';
+},{passive:true});
+
+// ── NAV ──────────────────────────────────────
+const nav = document.getElementById('nav');
+window.addEventListener('scroll',()=>{ nav.classList.toggle('sc',window.scrollY>60); },{passive:true});
+
+// ── CURSOR ───────────────────────────────────
+const cur=document.getElementById('cur'), ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function animate(){
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+  rx+=(mx-rx)*0.11; ry+=(my-ry)*0.11;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animate);
+})();
+document.querySelectorAll('a,button,.r-card,.d-card,.t-card,.s-block').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+});
+
+// ── REVEAL OBSERVER ──────────────────────────
+const ioRv = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const d = parseInt(e.target.dataset.d||0);
+    setTimeout(()=>e.target.classList.add('vis'),d);
+    ioRv.unobserve(e.target);
+  });
+},{threshold:0.12});
+document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>ioRv.observe(el));
+
+// ── DRIVER CARDS ─────────────────────────────
+const dCards = document.querySelectorAll('.d-card');
+const ioDr = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('vis');ioDr.unobserve(e.target);} });
+},{threshold:0.2});
+dCards.forEach(c=>ioDr.observe(c));
+// divider
+const dDiv=document.getElementById('dDiv');
+new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting) dDiv.classList.add('vis');
+},{threshold:0.3}).observe(dDiv);
+
+// ── DRIVER 3D TILT ───────────────────────────
+dCards.forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)/(r.width/2);
+    const dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+    card.style.transform=`perspective(1200px) rotateY(${dx*5}deg) rotateX(${-dy*3.5}deg)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';
+    card.style.transform='perspective(1200px) rotateY(0) rotateX(0)';
+    setTimeout(()=>card.style.transition='',600);
   });
 });
 
-// ─── STAT COUNTERS ───────────────────────
-function animateCount(el) {
-  const target  = parseInt(el.dataset.count);
-  const decimal = el.dataset.decimal || '';
-  const suffix  = el.dataset.suffix || '';
-  const dur     = 1500;
-  const start   = performance.now();
+// ── CHECKER REVEAL SECTION ───────────────────
+const ckReveal=document.getElementById('ckReveal');
+new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){ckReveal.classList.add('vis');}
+},{threshold:0.4}).observe(ckReveal);
 
-  function tick(now) {
-    const t   = Math.min((now - start) / dur, 1);
-    // easeOutExpo
-    const ease = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-    const val  = Math.floor(ease * target);
-    el.textContent = val.toLocaleString() + decimal + suffix;
-    if (t < 1) requestAnimationFrame(tick);
+// ── STAT COUNTERS ────────────────────────────
+function countUp(el){
+  const target=parseInt(el.dataset.count);
+  const dec=el.dataset.dec||'';
+  const sfx=el.dataset.sfx||'';
+  const dur=1600;
+  const t0=performance.now();
+  function tick(now){
+    const t=Math.min((now-t0)/dur,1);
+    const ease=t===1?1:1-Math.pow(2,-10*t);
+    el.textContent=Math.floor(ease*target).toLocaleString()+dec+sfx;
+    if(t<1) requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 }
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){countUp(e.target);}});
+},{threshold:0.5}).observe(document.getElementById('performance'));
+document.querySelectorAll('[data-count]').forEach(el=>{
+  new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){countUp(el);}
+  },{threshold:0.5}).observe(el);
+});
 
-const countEls = document.querySelectorAll('[data-count]');
-const countIo  = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      animateCount(entry.target);
-      countIo.unobserve(entry.target);
-    }
+// ── TECH CARD 3D TILT ────────────────────────
+document.querySelectorAll('.t-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)/(r.width/2);
+    const dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+    card.style.transform=`perspective(900px) rotateY(${dx*6}deg) rotateX(${-dy*5}deg) translateY(-5px)`;
   });
-}, { threshold: 0.5 });
-countEls.forEach(el => countIo.observe(el));
-
-// ─── TECH CARD 3D TILT ───────────────────
-document.querySelectorAll('.tech-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const dx   = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
-    const dy   = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-    card.style.transform = `perspective(800px) rotateY(${dx * 5}deg) rotateX(${-dy * 4}deg) translateY(-4px)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
-    card.style.transform  = 'perspective(800px) rotateY(0) rotateX(0) translateY(0)';
-    setTimeout(() => card.style.transition = '', 500);
+  card.addEventListener('mouseleave',()=>{
+    card.style.transition='transform .5s cubic-bezier(.16,1,.3,1)';
+    card.style.transform='perspective(900px) rotateY(0) rotateX(0) translateY(0)';
+    setTimeout(()=>card.style.transition='',500);
   });
 });
 
-// ─── CTA SECTION OBSERVE ────────────────
-const ctaSection = document.getElementById('cta');
-const ctaIo = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting) {
-    ctaSection.classList.add('visible');
-    ctaIo.unobserve(ctaSection);
-  }
-}, { threshold: 0.3 });
-ctaIo.observe(ctaSection);
+// ── MAGNETIC BUTTONS ─────────────────────────
+document.querySelectorAll('.magnetic').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const x=e.clientX-r.left-r.width/2;
+    const y=e.clientY-r.top-r.height/2;
+    btn.style.transform=`translate(${x*.32}px,${y*.32}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>{
+    btn.style.transition='transform .45s cubic-bezier(.16,1,.3,1)';
+    btn.style.transform='translate(0,0)';
+    setTimeout(()=>btn.style.transition='',450);
+  });
+});
 
-// ─── PARALLAX ────────────────────────────
-const heroGhost = document.querySelector('.hero-ghost-num');
-window.addEventListener('scroll', () => {
-  const sy = window.scrollY;
-  if (heroGhost) heroGhost.style.transform = `translateY(calc(-50% + ${sy * 0.2}px))`;
-}, { passive: true });
+// ── TEXT SCRAMBLE ────────────────────────────
+class Scramble {
+  constructor(el){
+    this.el=el;
+    this.chars='!<>-_\\/[]{}—=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    this.raf=null;
+  }
+  run(text,speed=1.5){
+    const orig=text;
+    let frame=0;
+    cancelAnimationFrame(this.raf);
+    const tick=()=>{
+      let out='';
+      for(let i=0;i<orig.length;i++){
+        if(frame/speed>i){out+=orig[i];}
+        else{out+=`<span style="color:var(--orange);opacity:.4">${this.chars[Math.floor(Math.random()*this.chars.length)]}</span>`;}
+      }
+      this.el.innerHTML=out;
+      frame++;
+      if(frame<orig.length*speed*1.5) this.raf=requestAnimationFrame(tick);
+      else this.el.textContent=orig;
+    };
+    tick();
+  }
+}
+// apply scramble to glitch elements on scroll
+document.querySelectorAll('.glitch[data-text]').forEach(el=>{
+  const sc=new Scramble(el);
+  const orig=el.dataset.text;
+  new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){
+      setTimeout(()=>sc.run(orig),300);
+    }
+  },{threshold:.5}).observe(el);
+});
+
+// ── CTA OBSERVER ─────────────────────────────
+new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting) document.getElementById('cta').classList.add('vis');
+},{threshold:.3}).observe(document.getElementById('cta'));
+
+// ── PARALLAX ─────────────────────────────────
+const carWrap=document.querySelector('.car-wrap');
+window.addEventListener('scroll',()=>{
+  if(carWrap){
+    const sy=window.scrollY;
+    carWrap.style.transform=`translateX(${sy*0.08}px)`;
+    // re-apply only x, keep y animation from CSS
+    if(sy>window.innerHeight) carWrap.style.opacity=Math.max(0,1-(sy-window.innerHeight)/400);
+    else carWrap.style.opacity='';
+  }
+},{passive:true});
 </script>
 </body>
 </html>
