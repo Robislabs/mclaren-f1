@@ -409,7 +409,13 @@ body.cl #cursor-ring{width:50px;height:50px;border-color:var(--orange);backgroun
   .hero-meta{display:none}
   .hero-scroll{display:none}
   .car-interactive{padding:0 16px}
-  .hotspot{display:none}
+  .hs-dot{width:16px;height:16px}
+  .hs-pulse{width:16px;height:16px}
+  .car-panel{min-width:160px;max-width:200px;padding:10px 13px;font-size:10px}
+  .cp-name{font-size:10px}
+  .cp-stat{font-size:10px}
+  .hotspot.active .car-panel{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hs-below.active .car-panel{opacity:1;transform:translateX(-50%) translateY(0)}
   .drivers{grid-template-columns:1fr;min-height:auto}
   .driver-card:last-child{clip-path:inset(0 0 0 100%)}
   .driver-card{min-height:400px}
@@ -942,6 +948,19 @@ function initAnim() {
       })
     })
   }
+
+  /* Hotspot tap-to-toggle (mobile) */
+  document.querySelectorAll('.hotspot').forEach(hs => {
+    hs.addEventListener('click', e => {
+      e.stopPropagation()
+      const wasActive = hs.classList.contains('active')
+      document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'))
+      if (!wasActive) hs.classList.add('active')
+    })
+  })
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'))
+  })
 
   /* Performance counters */
   document.querySelectorAll('.stat-num[data-target]').forEach(el => {
