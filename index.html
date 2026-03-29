@@ -238,6 +238,8 @@ body.cl #cursor-ring{width:50px;height:50px;border-color:var(--orange);backgroun
   transition:transform .2s;
 }
 .hotspot:hover .hs-dot{transform:scale(1.5)}
+.hotspot.active{z-index:100}
+.hotspot.active .hs-dot{transform:scale(1.5)}
 .hs-pulse{
   position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
@@ -554,7 +556,7 @@ body.cl #cursor-ring{width:50px;height:50px;border-color:var(--orange);backgroun
         draggable="false"
       >
       <!-- Hotspot: Front Wing -->
-      <div class="hotspot" style="left:14%;top:82%">
+      <div class="hotspot" style="left:31%;top:77%">
         <div class="hs-pulse"></div>
         <div class="hs-dot"></div>
         <div class="car-panel">
@@ -949,18 +951,35 @@ function initAnim() {
     })
   }
 
-  /* Hotspot tap-to-toggle (mobile) */
-  document.querySelectorAll('.hotspot').forEach(hs => {
+  /* Hotspot tap-to-toggle with GSAP dim + spring */
+  const allHotspots = document.querySelectorAll('.hotspot')
+  function closeAllHotspots() {
+    allHotspots.forEach(h => {
+      h.classList.remove('active')
+      gsap.to(h, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' })
+    })
+  }
+  allHotspots.forEach(hs => {
     hs.addEventListener('click', e => {
       e.stopPropagation()
       const wasActive = hs.classList.contains('active')
-      document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'))
-      if (!wasActive) hs.classList.add('active')
+      closeAllHotspots()
+      if (!wasActive) {
+        hs.classList.add('active')
+        // Dim + shrink all other dots
+        allHotspots.forEach(h => {
+          if (h !== hs) gsap.to(h, { opacity: 0.22, scale: 0.75, duration: 0.3, ease: 'power2.out' })
+        })
+        // Spring-animate the panel in
+        const panel = hs.querySelector('.car-panel')
+        gsap.fromTo(panel,
+          { y: 14, scale: 0.85, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.6)', overwrite: true }
+        )
+      }
     })
   })
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'))
-  })
+  document.addEventListener('click', closeAllHotspots)
 
   /* Performance counters */
   document.querySelectorAll('.stat-num[data-target]').forEach(el => {
